@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Energy Meter</title>
+</head>
+<body>
+    <h2>Smart Energy Bill Prediction</h2>
+
+    <form id="predictionForm">
+        Month: <input type="number" id="month"><br><br>
+        Units Consumed: <input type="number" id="units"><br><br>
+        Previous Month Units: <input type="number" id="prev_units"><br><br>
+        Season:
+        <select id="season">
+            <option value="0">Winter</option>
+            <option value="1">Summer</option>
+            <option value="2">Monsoon</option>
+            <option value="3">Post-Monsoon</option>
+        </select><br><br>
+
+        <button type="button" onclick="predictBill()">Predict</button>
+    </form>
+
+    <h3 id="result"></h3>
+
+<script>
+function predictBill() {
+    fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            month: parseInt(document.getElementById("month").value),
+            units: parseInt(document.getElementById("units").value),
+            previous_units: parseInt(document.getElementById("prev_units").value),
+            season: parseInt(document.getElementById("season").value)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Predicted Bill: ₹ " + data.predicted_bill;
+    });
+}
+</script>
+
+</body>
+</html>
